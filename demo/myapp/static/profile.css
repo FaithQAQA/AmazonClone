@@ -1,0 +1,34 @@
+/* profile.css */
+
+/* Style for the profile header */
+h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+/* Style for user information */
+.profile-info {
+    margin-bottom: 20px;
+}
+
+.profile-info p {
+    margin-bottom: 8px;
+}
+
+/* Style for the form */
+.form-group {
+    margin-top: 20px;
+}
+
+/* Style for the update button */
+.update-btn {
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.update-btn:hover {
+    background-color: #0056b3;
+}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'profile.css' %}">
+
+<!-- Display user info -->
+<h1>Your Account, {{ user.username }}</h1>
+<div class="profile-info">
+    <p>Email: {{ user.email }}</p>
+    <p>Phone Number: {{ user.phone_number }}</p>
+    <p>Date joined: {{ user.date_joined }}</p>
+
+    <form method="POST" class="form-group">
+        {% csrf_token %}
+        {{ form }}
+        <a href="{% url 'update_user' %}" class="update-btn">Update Info</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+  <h1>Items in Shop</h1>
+  <div class="items-container">
+    {% for item in items %}
+    <div class="item">
+   
+  
+
+      <div class="card">
+        <img src="{{ item.image.url }}" class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">{{ item.title }}</h5>
+            <p class="card-text">Cost: ${{ item.cost }}</p>
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'add_to_cart' item.id %}">
+              {% csrf_token %}
+              <input type="number" name="quantity" min="1" max="{{ item.left_in_stock }}" value="1">
+              <button type="submit">Add to Cart</button>
+          </form>
+          
+          
+            {% else %}
+                <a class="nav-link" href="{% url 'login' %}">Log In to add items to cart!</a>
+            {% endif %}
+        </div>
+    </div>
+    
+
+  </div>
+  
+    {% endfor %}
+  </div>
+
+
+
+  <script>
+    function addItemToCart(itemId) {
+      const form = document.getElementById(`add-to-cart-form-${itemId}`);
+      const quantity = form.querySelector('input[name="quantity"]').value;
+
+      if (!isNaN(quantity) && quantity > 0 && quantity <= parseInt(form.querySelector('input[name="quantity"]').max)) {
+        fetch(`/add_to_cart/${itemId}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({ quantity })
+        })
+        .then(response => {
+          if (response.ok) {
+            alert('Item added to cart!');
+          } else {
+            alert('Failed to add item to cart.');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Failed to add item to cart.');
+        });
+      } else {
+        alert('Invalid quantity or quantity exceeds stock.');
+      }
+      const stockElement = document.getElementById(`stock-${itemId}`);
+      if (stockElement) {
+          const currentStock = parseInt(stockElement.innerText);
+          const updatedStock = currentStock - parseInt(quantity);
+          stockElement.innerText = updatedStock >= 0 ? updatedStock : 0;
+      }
+    }
+  </script>
+{% endblock %}
